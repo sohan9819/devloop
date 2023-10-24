@@ -1,19 +1,24 @@
 "use client";
 
 import Link from "next/link";
-import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
+
+import { api } from "~/trpc/server";
+import ListPost from "./_components/list-post";
+import Nav from "./_components/nav";
 
 import { CreatePost } from "~/app/_components/create-post";
+import { useUser } from "@clerk/nextjs";
 // import { api } from "~/trpc/server";
 
 export default function Home() {
   // const hello = await api.post.hello.query({ text: "from tRPC" });
 
-  const { isSignedIn, user, isLoaded } = useUser();
+  const { user, isSignedIn } = useUser();
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
       <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
+        <Nav />
         <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
           Create <span className="text-[hsl(280,100%,70%)]">T3</span> App
         </h1>
@@ -46,11 +51,8 @@ export default function Home() {
             {hello ? hello.greeting : "Loading tRPC query..."}
           </p>
         </div> */}
-        <div className="flex flex-col items-center gap-2">
-          {!isLoaded && "Loading..."}
-          {isSignedIn && user.fullName}
-          {!isSignedIn ? <SignInButton /> : <SignOutButton />}
-        </div>
+        {isSignedIn && <CreatePost />}
+        <ListPost />
       </div>
     </main>
   );

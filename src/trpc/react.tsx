@@ -14,7 +14,16 @@ export function TRPCReactProvider(props: {
   children: React.ReactNode;
   headers: Headers;
 }) {
-  const [queryClient] = useState(() => new QueryClient());
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            refetchOnWindowFocus: false, // default: true
+          },
+        },
+      }),
+  );
 
   const [trpcClient] = useState(() =>
     api.createClient({
@@ -27,14 +36,14 @@ export function TRPCReactProvider(props: {
         }),
         unstable_httpBatchStreamLink({
           url: getUrl(),
-          headers() {
-            const heads = new Map(props.headers);
-            heads.set("x-trpc-source", "react");
-            return Object.fromEntries(heads);
-          },
+          // headers() {
+          //   const heads = new Map(props.headers);
+          //   heads.set("x-trpc-source", "react");
+          //   return Object.fromEntries(heads);
+          // },
         }),
       ],
-    })
+    }),
   );
 
   return (
